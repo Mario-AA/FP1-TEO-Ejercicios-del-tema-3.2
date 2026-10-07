@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import *
 
 def es_dia_festivo(fecha: date) -> bool:
     """
@@ -24,3 +24,22 @@ def es_dia_festivo(fecha: date) -> bool:
     }
     
     return (fecha.month, fecha.day) in dias_festivos
+def es_dia_no_laborable(fecha: date)-> bool:
+    if fecha.weekday() in (5,6) or es_dia_festivo(fecha):
+        return True
+    else:
+        return False
+
+def calcular_siguiente_valida(fecha_anterior, intervalo_dias):
+    fecha_siguiente = fecha_anterior + timedelta(days=intervalo_dias)
+    while es_dia_no_laborable(fecha_siguiente):
+        fecha_siguiente=fecha_siguiente + timedelta(days=1)
+    return fecha_siguiente
+
+def planificar_eventos(fecha_inicio, intervalo_dias, num_eventos):
+    fecha_evento = calcular_siguiente_valida(fecha_inicio,0)
+    for i in range (1,num_eventos+1):
+        print(f"Evento {i}: {fecha_evento}")
+        fecha_evento = calcular_siguiente_valida(fecha_evento,intervalo_dias)
+    
+
